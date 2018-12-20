@@ -1,3 +1,4 @@
+import Data.Char
 -- Simple function definitions
 doubleMe x = 2 * x
 doubleUs x y = doubleMe x + doubleMe y
@@ -45,4 +46,52 @@ myCharRange = ['a'..'l']
 myThirdRange = [1,3..200]
 myThirdCharRange = ['a','d'..'z']
 -- Ranges can be reversed with a step, too
+myBackRange :: [Int]
 myBackRange = [200,199..1]
+-- List comprehensions are a thing
+meComprende = [doubleMe x | x <- [1,5..78], mod x 3 == 2]
+boomBangs ::  [Int] -> [String]
+boomBangs xs = [
+    if even x 
+    then "BOOM"
+    else "BANG" 
+        | x <- xs
+    ]
+-- Functions with types ftw
+isVowel :: Char -> Bool
+isVowel x = if elem (toLower x) ['a','e', 'i', 'o', 'u']
+            then True
+            else False
+removeAlphaChars :: String -> String
+removeAlphaChars xs = [x | x <- xs, not ((toUpper x) `elem` ['A'..'Z'])]
+-- Tuples can have differently-typed constituents, but must be finite
+myAlphabetEnum = zip [0..250] ['A'..'Z']
+-- Pattern matching ftw
+isLowercaseVowel :: Char -> Bool
+isLowercaseVowel 'a' = True
+isLowercaseVowel 'e' = True
+isLowercaseVowel 'i' = True
+isLowercaseVowel 'o' = True
+isLowercaseVowel 'u' = True
+isLowercaseVowel _ = False
+-- Also recursion
+factorial :: (Integral a) => a -> a
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
+length' :: (Num b) => [a] -> b
+length' [] = 0
+length' (_:xs) = 1 + length' xs
+--The 'as pattern' (at pattern?), for keeping a reference to a full list
+sum' :: [Int] -> String
+sum' list@(x:xs) = "The sum of " ++ show list ++ " is " ++ show (sum xs) ++ ", and the first number is " ++ show x
+-- Guards are akin to if-else chains, or pattern-matching functions with general boolean expressions rather than just equality
+doYouEven :: (Integral a) => a -> Bool
+doYouEven int
+    | mod int 2 == 1 = False
+    | otherwise      = True
+moderateMe :: (Integral a) => a -> a -> Bool
+moderateMe l r
+    | l == 0 || r == 0 = error "Can't mod zero!"
+    | mod l r == 0     = True
+    | mod r l == 0     = True
+    | otherwise        = False
