@@ -1,4 +1,5 @@
 import Data.Char
+import Data.Ratio
 -- Simple function definitions
 doubleMe x = 2 * x
 doubleUs x y = doubleMe x + doubleMe y
@@ -81,7 +82,7 @@ factorial n = n * factorial (n - 1)
 length' :: (Num b) => [a] -> b
 length' [] = 0
 length' (_:xs) = 1 + length' xs
---The 'as pattern' (at pattern?), for keeping a reference to a full list
+--The 'as pattern', for keeping a reference to a full list
 sum' :: [Int] -> String
 sum' list@(x:xs) = "The sum of " ++ show list ++ " is " ++ show (sum xs) ++ ", and the first number is " ++ show x
 -- Guards are akin to if-else chains, or pattern-matching functions with general boolean expressions rather than just equality
@@ -95,3 +96,21 @@ moderateMe l r
     | mod l r == 0     = True
     | mod r l == 0     = True
     | otherwise        = False
+-- Let and where clauses are two ways of binding local variables. Beware of shadowing.
+gravity :: (Eq a, Fractional a) => a -> a -> a -> a
+gravity m1 m2 r
+    | r == 0    = error "Can't divide by zero!"
+    | otherwise = g * invsq
+    where invsq = (m1 * m2) / r^2
+          g     = 6.674 * 10^^(-11)
+gravity' m1 m2 r =
+    if r == 0 then error "Can't divide by zero!!!" else
+    let invsq = (m1 * m2) / r^2
+        g     = 6.674 * 10^^(-11)
+    in g * invsq
+calcAvgs :: (Fractional p) => [(p,p)] -> [p]
+calcAvgs pairs = [avg | (x, y) <- pairs, let avg = (x + y)/2 ]
+-- Cases are a bit like switch statements, but awesomer
+casetorial :: (Integral i) => i -> i
+casetorial n = case n of 0 -> 1
+                         n -> n * casetorial (n - 1)
