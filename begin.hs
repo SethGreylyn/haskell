@@ -114,3 +114,13 @@ calcAvgs pairs = [avg | (x, y) <- pairs, let avg = (x + y)/2 ]
 casetorial :: (Integral i) => i -> i
 casetorial n = case n of 0 -> 1
                          n -> n * casetorial (n - 1)
+-- Recursion for the awesome
+newMax [] = error "Vacuous"
+newMax [x] = x
+newMax (x:xs)
+    | x > maxTail = x
+    | otherwise     = maxTail
+    where maxTail = newMax xs
+fibs :: [Int]
+fibs = 1 : fibstail where fibstail = 1 : zipWith (+) (1:fibstail) fibstail
+fib n = fibs !! n
