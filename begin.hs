@@ -124,3 +124,8 @@ newMax (x:xs)
 fibs :: [Int]
 fibs = 1 : fibstail where fibstail = 1 : zipWith (+) (1:fibstail) fibstail
 fib n = fibs !! n
+
+atIndex :: [a] -> Int -> a
+atIndex [] n   = error "Index out of range"
+atIndex xs 0 = head xs
+atIndex (x:xs) n = atIndex xs (n-1)
