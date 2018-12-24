@@ -124,8 +124,68 @@ newMax (x:xs)
 fibs :: [Int]
 fibs = 1 : fibstail where fibstail = 1 : zipWith (+) (1:fibstail) fibstail
 fib n = fibs !! n
-
 atIndex :: [a] -> Int -> a
 atIndex [] n   = error "Index out of range"
 atIndex xs 0 = head xs
 atIndex (x:xs) n = atIndex xs (n-1)
+minimum' :: (Ord a) => [a] -> a
+minimum' []     = error "Vacuous"
+minimum' [x]    = x
+minimum' (x:xs) = min x (minimum' xs)
+replicate' :: (Num n, Ord n) => n -> t -> [t]
+replicate' n x
+    | n <= 0    = []
+    | otherwise = x : replicate' (n - 1) x
+take' :: (Num a, Ord a) => a -> [x] -> [x]
+take' _ []     = []
+take' n _ 
+    | n <= 0   = []
+take' n (x:xs) = x : take' (n - 1) xs
+reverse' :: [a] -> [a]
+reverse' [] = []
+reverse' (x:xs) = reverse' xs ++ [x]
+zip' :: [a] -> [b] -> [(a,b)]
+zip' [] _          = []
+zip' _ []          = []
+zip' (x:xs) (y:ys) = (x, y) : zip' xs ys
+elem' :: (Eq a) => a -> [a] -> Bool
+elem' _ [] = False
+elem' i (x:xs) = i == x || elem' i xs
+qsort' :: (Ord a) => [a] -> [a]
+qsort' [] = []
+qsort' (x:xs) = (qsort' [y | y <- xs, y < x]) ++ [x] ++ (qsort' [z | z <- xs, z > x])
+--Some more advanced ideas using extant functions
+collatz :: (Integral a) => a -> [a]
+collatz 1 = [1]
+collatz n
+    | even n = n : collatz (div n 2)
+    | otherwise = n : collatz (n * 3 + 1)
+-- Lambda expressions start with \, are surrounded with parentheses, and are anonymous functions
+numLongChains :: Int
+numLongChains = length (filter (\ xs -> length xs > 15) (map collatz [1..100]))
+-- Folds accumulate a list into a single value
+sum'' :: (Num a) => [a] -> a
+sum'' = foldl (+) 0
+-- Reimplement map with a left fold, and again with a right fold; right folds on lists are more efficient because
+-- of the efficiency of : over ++ for list operations
+map' :: (a -> b) -> [a] -> [b]
+map' f = foldl (\ acc x -> acc ++ [f x]) []
+map'' :: (a -> b) -> [a] -> [b]
+map'' f = foldr (\ x acc -> f x : acc) []
+-- Experimental reimplementation of ++
+conc :: [a] -> [a] -> [a]
+conc [] ys = ys
+conc xs [] = xs
+conc xs ys = conc (init xs) ((last xs) : ys)
+-- Scans are similar to folds, but they report the interstitial accumulators in lists
+sqrtSums = length (takeWhile (<1000) (scanl1 (+) (map sqrt [1..])))
+-- The 'apply' function is right-associative and lowest precedence, so it can help to remove parentheses
+sqrtSums' = length $ takeWhile (<1000) $ scanl1 (+) $ map sqrt [1..]
+-- This can help map lists of functions as well
+funcListMap :: a -> [a -> b] -> [b]
+funcListMap x = map ($x)
+-- Function composition is also an awesome thing
+composeMap :: (b -> c) -> (a -> b) -> [a] -> [c]
+composeMap f g = map (f . g)
+negSumTail :: (Num a) => [[a]] -> [a]
+negSumTail = map (negate . sum . tail)
