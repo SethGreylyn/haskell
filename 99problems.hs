@@ -1,6 +1,6 @@
 -- tests neu
 
--- boo
+-- boo who?
 
 -- 1. Find last elm in a list
 myLast :: [a] -> a
