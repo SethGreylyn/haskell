@@ -1,3 +1,5 @@
+-- tests neu
+
 -- 1. Find last elm in a list
 myLast :: [a] -> a
 myLast (x:xs)
@@ -20,7 +22,7 @@ myLength = foldr (\_ acc -> acc + 1) 0
 -- 5. Reverse a list
 gegenwart :: [a] -> [a]
 gegenwart [] = []
-gegenwart (x:xs) =  gegenwart xs ++ [x] 
+gegenwart (x:xs) =  gegenwart xs ++ [x]
 -- 6. Find whether a list is a palindrome
 pal :: (Eq a) => [a] -> Bool
 pal [] = True
